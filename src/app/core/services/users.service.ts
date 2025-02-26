@@ -20,4 +20,11 @@ export class UsersService {
       .get<{ data: User }>(`https://reqres.in/api/users/${userId}`)
       .pipe(map((response) => response.data));
   }
+
+  public updateUser(userId: number, changes: Partial<User>) {
+    return this.http.put<User>(
+      `https://reqres.in/api/users/${userId}`,
+      changes,
+    );
+  }
 }

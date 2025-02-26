@@ -27,7 +27,7 @@ export class UserDetailsComponent implements OnInit {
   private location = inject(Location);
   private usersService = inject(UsersService);
 
-  protected user = {} as User;
+  protected user: User | null = null;
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
