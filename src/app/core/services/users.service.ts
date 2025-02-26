@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
-import { User } from '../types/user';
+import { environment } from '../../../environments/environment';
+import { User, UserResponse, UsersResponse } from '../types/user';
 
 @Injectable({
   providedIn: 'root',
@@ -10,21 +11,20 @@ export class UsersService {
   private http = inject(HttpClient);
 
   public getUsers(page: number): Observable<User[]> {
+    const params = new HttpParams().set('page', page.toString());
+
     return this.http
-      .get<{ data: User[] }>(`https://reqres.in/api/users?page=${page ?? 1}`)
+      .get<UsersResponse>(environment.apiUrl + '/users', { params })
       .pipe(map((response) => response.data));
   }
 
-  public getUser(userId: number): Observable<User> {
+  public getUser(id: number): Observable<User> {
     return this.http
-      .get<{ data: User }>(`https://reqres.in/api/users/${userId}`)
+      .get<UserResponse>(`${environment.apiUrl}/users/${id}`)
       .pipe(map((response) => response.data));
   }
 
-  public updateUser(userId: number, changes: Partial<User>) {
-    return this.http.put<User>(
-      `https://reqres.in/api/users/${userId}`,
-      changes,
-    );
+  public updateUser(id: number, changes: Partial<User>) {
+    return this.http.put<User>(`${environment.apiUrl}/users/${id}`, changes);
   }
 }
