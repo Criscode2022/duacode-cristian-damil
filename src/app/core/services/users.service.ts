@@ -27,4 +27,8 @@ export class UsersService {
   public updateUser(id: number, changes: Partial<User>) {
     return this.http.put<User>(`${environment.apiUrl}/users/${id}`, changes);
   }
+
+  public deleteUser(id: number) {
+    return this.http.delete<null>(`${environment.apiUrl}/users/${id}`);
+  }
 }

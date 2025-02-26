@@ -48,7 +48,11 @@
           >
             <mat-icon>edit</mat-icon> Edit
           </button>
-          <button mat-raised-button class="!bg-red-400 !text-white">
+          <button
+            mat-raised-button
+            class="!bg-red-400 !text-white"
+            (click)="delete()"
+          >
             <mat-icon>delete</mat-icon> Delete
           </button>
         </div>

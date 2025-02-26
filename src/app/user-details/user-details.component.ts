@@ -27,15 +27,27 @@ export class UserDetailsComponent implements OnInit {
   private location = inject(Location);
   private usersService = inject(UsersService);
 
+  protected userId = 0;
   protected user: User | null = null;
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      const userId = params['userId'];
+      this.userId = params['userId'];
 
-      this.usersService.getUser(userId).subscribe((user) => {
+      this.usersService.getUser(this.userId).subscribe((user) => {
         this.user = user;
       });
+    });
+  }
+
+  protected delete() {
+    if (!this.userId) {
+      return;
+    }
+
+    this.usersService.deleteUser(this.userId).subscribe({
+      next: () => console.log('User deleted successfully'),
+      error: (error) => console.error('Error deleting user', error),
     });
   }
 
