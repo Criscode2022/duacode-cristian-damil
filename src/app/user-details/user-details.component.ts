@@ -4,8 +4,9 @@ import { Component, inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UsersService } from '../core/services/users.service';
 import { User } from '../core/types/user';
 
@@ -24,7 +25,9 @@ import { User } from '../core/types/user';
 })
 export class UserDetailsComponent implements OnInit {
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private location = inject(Location);
+  private snackbar = inject(MatSnackBar);
   private usersService = inject(UsersService);
 
   protected userId = 0;
@@ -34,8 +37,13 @@ export class UserDetailsComponent implements OnInit {
     this.route.params.subscribe((params) => {
       this.userId = params['userId'];
 
-      this.usersService.getUser(this.userId).subscribe((user) => {
-        this.user = user;
+      this.usersService.getUser(this.userId).subscribe({
+        next: (user) => {
+          this.user = user;
+        },
+        error: (error) => {
+          console.error(error);
+        },
       });
     });
   }
@@ -46,8 +54,17 @@ export class UserDetailsComponent implements OnInit {
     }
 
     this.usersService.deleteUser(this.userId).subscribe({
-      next: () => console.log('User deleted successfully'),
-      error: (error) => console.error('Error deleting user', error),
+      next: () => {
+        this.router.navigate(['/']);
+
+        this.snackbar.open('User deleted successfully', 'Close', {
+          duration: 5000,
+        });
+      },
+      error: () =>
+        this.snackbar.open('Failed to delete user', 'Close', {
+          duration: 5000,
+        }),
     });
   }
 

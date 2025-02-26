@@ -7,6 +7,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { UsersService } from '../core/services/users.service';
@@ -33,6 +34,7 @@ import { UserUpdateForm } from './user-update.form';
 export class UserUpdateComponent extends UserUpdateForm {
   private route = inject(ActivatedRoute);
   private location = inject(Location);
+  private snackbar = inject(MatSnackBar);
   private usersService = inject(UsersService);
 
   protected user: User | null = null;
@@ -41,9 +43,15 @@ export class UserUpdateComponent extends UserUpdateForm {
     this.route.params.subscribe((params) => {
       const userId = params['userId'];
 
-      this.usersService.getUser(userId).subscribe((user) => {
-        this.user = user;
-        this.populateForm();
+      this.usersService.getUser(userId).subscribe({
+        next: (user) => {
+          this.user = user;
+
+          this.populateForm();
+        },
+        error: (error) => {
+          console.error(error);
+        },
       });
     });
   }
@@ -72,8 +80,20 @@ export class UserUpdateComponent extends UserUpdateForm {
     };
 
     this.usersService.updateUser(this.user.id, updateDTO).subscribe({
-      next: () => this.goBack(),
-      error: (err) => console.error('Error updating user:', err),
+      next: () => {
+        this.goBack();
+
+        this.snackbar.open('User updated successfully', 'Close', {
+          duration: 5000,
+        });
+      },
+      error: (err) => {
+        console.error('Error updating user:', err);
+
+        this.snackbar.open('Failed to update user', 'Close', {
+          duration: 5000,
+        });
+      },
     });
   }
 
