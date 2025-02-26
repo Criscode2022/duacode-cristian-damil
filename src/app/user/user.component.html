@@ -1,24 +1,26 @@
-<mat-card class="hover:!shadow-xl transition-shadow duration-200">
+<mat-card
+  class="hover:!shadow-xl hover:!bg-gray-200 transition-all duration-200 cursor-pointer"
+  [routerLink]="'/user/' + user.id"
+>
   <mat-card-header>
     <div mat-card-avatar>
       <img
         mat-card-image
-        src="{{ user.avatar }}"
+        [src]="user.avatar"
         alt="{{ user.first_name }} {{ user.last_name }}"
       />
     </div>
     <mat-card-title>{{ user.first_name }} {{ user.last_name }}</mat-card-title>
-    <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
-    <button
-      mat-icon-button
-      [cdkCopyToClipboard]="user.email"
-      class="mt-4"
-      matTooltip="Copy email"
+    <mat-card-subtitle class="!flex items-center flex-nowrap gap-2"
+      >{{ user.email }}
+      <button
+        mat-icon-button
+        [cdkCopyToClipboard]="user.email"
+        matTooltip="Copy email"
+      >
+        <mat-icon>content_copy</mat-icon>
+      </button></mat-card-subtitle
     >
-      <mat-icon>content_copy</mat-icon>
-    </button>
   </mat-card-header>
-  <mat-card-content class="!flex justify-end">
-    <button mat-mini-fab><mat-icon>chevron_right</mat-icon></button>
-  </mat-card-content>
+  <mat-card-content> </mat-card-content>
 </mat-card>

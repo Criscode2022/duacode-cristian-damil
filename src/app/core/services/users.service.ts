@@ -14,4 +14,10 @@ export class UsersService {
       .get<{ data: User[] }>(`https://reqres.in/api/users?page=${page ?? 1}`)
       .pipe(map((response) => response.data));
   }
+
+  public getUser(userId: number): Observable<User> {
+    return this.http
+      .get<{ data: User }>(`https://reqres.in/api/users/${userId}`)
+      .pipe(map((response) => response.data));
+  }
 }

@@ -4,10 +4,13 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { RouterModule } from '@angular/router';
+import { User } from '../core/types/user';
 
 @Component({
   selector: 'app-user',
   imports: [
+    RouterModule,
     ClipboardModule,
     MatButtonModule,
     MatCardModule,
@@ -18,5 +21,5 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   styleUrl: './user.component.scss',
 })
 export class UserComponent {
-  @Input() user: any;
+  @Input() user = {} as User;
 }

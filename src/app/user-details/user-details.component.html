@@ -1,0 +1,60 @@
+<div class="m-4">
+  <button mat-icon-button (click)="goBack()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  @if (!user.id) {
+    <div class="flex flex-col gap-4 items-center justify-center h-96">
+      <img
+        src="not_found.svg"
+        class="h-60 aspect-auto"
+        alt="Image showing a mountain and number 404"
+      />
+
+      <h2 class="text-2xl font-bold text-center">User not found</h2>
+    </div>
+  } @else {
+    <mat-card
+      class="relative hover:!shadow-xl transition-shadow duration-200 w-fit p-8 mt-8"
+    >
+      <mat-card-header>
+        <mat-card-title class="!font-bold"
+          >{{ user.first_name }} {{ user.last_name }}</mat-card-title
+        >
+        <mat-card-subtitle>{{ user.email }}</mat-card-subtitle>
+        <button
+          mat-icon-button
+          [cdkCopyToClipboard]="user.email"
+          class="mt-4"
+          matTooltip="Copy email"
+        >
+          <mat-icon>content_copy</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content>
+        <img
+          [src]="user.avatar"
+          alt="{{ user.first_name }} {{ user.last_name }}"
+          width="150"
+          class="m-8"
+        />
+
+        <div class="flex flex-col">
+          <button
+            mat-raised-button
+            color="primary"
+            class="mb-4"
+            routerLink="update"
+          >
+            <mat-icon>edit</mat-icon> Edit
+          </button>
+          <button mat-raised-button class="!bg-red-400 !text-white">
+            <mat-icon>delete</mat-icon> Delete
+          </button>
+        </div>
+
+        <div class="absolute right-4 bottom-2">User ID: {{ user.id }}</div>
+      </mat-card-content>
+    </mat-card>
+  }
+</div>
