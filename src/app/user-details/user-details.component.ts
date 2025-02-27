@@ -1,6 +1,6 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { Location } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,12 +11,14 @@ import { switchMap } from 'rxjs';
 import { SubsManagerDirective } from '../core/directives/subs-manager/subs-manager.directive';
 import { UsersService } from '../core/services/users.service';
 import { User } from '../core/types/user';
+import { LoadingSpinnerComponent } from '../shared/components/loading-spinner/loading-spinner.component';
 
 @Component({
   selector: 'app-user-details',
   imports: [
     RouterModule,
     ClipboardModule,
+    LoadingSpinnerComponent,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
@@ -35,10 +37,14 @@ export class UserDetailsComponent
   private snackbar = inject(MatSnackBar);
   private usersService = inject(UsersService);
 
+  protected loading = signal(false);
+
   protected userId = 0;
   protected user: User | null = null;
 
   ngOnInit(): void {
+    this.loading.set(true);
+
     this.subs.add(
       this.route.params
         .pipe(
@@ -50,9 +56,11 @@ export class UserDetailsComponent
         .subscribe({
           next: (user) => {
             this.user = user;
+            this.loading.set(false);
           },
           error: (error) => {
             console.error(error);
+            this.loading.set(false);
           },
         }),
     );

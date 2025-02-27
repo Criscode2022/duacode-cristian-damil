@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, signal, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,13 +8,13 @@ import {
   MatPaginatorModule,
   PageEvent,
 } from '@angular/material/paginator';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { SubsManagerDirective } from '../core/directives/subs-manager/subs-manager.directive';
 import { UsersService } from '../core/services/users.service';
 import { User } from '../core/types/user';
+import { LoadingSpinnerComponent } from '../shared/components/loading-spinner/loading-spinner.component';
 import { UserComponent } from '../user/user.component';
 import { CreateDialog } from './components/create-dialog.component';
 
@@ -23,10 +23,10 @@ import { CreateDialog } from './components/create-dialog.component';
   imports: [
     CommonModule,
     UserComponent,
+    LoadingSpinnerComponent,
     MatButtonModule,
     MatIconModule,
     MatPaginatorModule,
-    MatProgressSpinnerModule,
     MatSidenavModule,
     MatToolbarModule,
   ],
@@ -38,6 +38,8 @@ export class UserListComponent extends SubsManagerDirective implements OnInit {
   private router = inject(Router);
   readonly dialog = inject(MatDialog);
   private usersService = inject(UsersService);
+
+  protected loading = signal(false);
 
   protected users: User[] = [];
 
@@ -56,6 +58,8 @@ export class UserListComponent extends SubsManagerDirective implements OnInit {
   }
 
   ngOnInit(): void {
+    this.loading.set(true);
+
     this.subs.add(
       this.route.queryParams.subscribe((params) => {
         const page = params['page'] || 1;
@@ -71,20 +75,28 @@ export class UserListComponent extends SubsManagerDirective implements OnInit {
         );
 
         this.subs.add(
-          this.usersService.getUsers(page).subscribe((users) => {
-            this.users = users.data;
-            this.pageSize = users.per_page;
-            this.totalItems = users.total;
+          this.usersService.getUsers(page).subscribe({
+            next: (users) => {
+              this.users = users.data;
+              this.pageSize = users.per_page;
+              this.totalItems = users.total;
 
-            if (Object.keys(filteredValues).length) {
-              this.users = this.users.filter((user) =>
-                Object.entries(filteredValues).every(([key, value]) =>
-                  (user as any)[key]
-                    ?.toLowerCase()
-                    .includes(value.toLowerCase()),
-                ),
-              );
-            }
+              this.loading.set(false);
+
+              if (Object.keys(filteredValues).length) {
+                this.users = this.users.filter((user) =>
+                  Object.entries(filteredValues).every(([key, value]) =>
+                    (user as any)[key]
+                      ?.toLowerCase()
+                      .includes(value.toLowerCase()),
+                  ),
+                );
+              }
+            },
+            error: (err) => {
+              console.error('Error fetching users:', err);
+              this.loading.set(false);
+            },
           }),
         );
       }),

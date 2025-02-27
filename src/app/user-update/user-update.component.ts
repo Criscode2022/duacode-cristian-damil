@@ -1,6 +1,6 @@
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { CommonModule, Location } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -13,6 +13,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { UsersService } from '../core/services/users.service';
 import { User } from '../core/types/user';
+import { LoadingSpinnerComponent } from '../shared/components/loading-spinner/loading-spinner.component';
 import { UserForm } from '../shared/forms/user.form';
 
 @Component({
@@ -22,6 +23,7 @@ import { UserForm } from '../shared/forms/user.form';
     RouterModule,
     ClipboardModule,
     ReactiveFormsModule,
+    LoadingSpinnerComponent,
     MatButtonModule,
     MatCardModule,
     MatFormFieldModule,
@@ -38,9 +40,13 @@ export class UserUpdateComponent extends UserForm {
   private snackbar = inject(MatSnackBar);
   private usersService = inject(UsersService);
 
+  protected loading = signal(false);
+
   protected user: User | null = null;
 
   ngOnInit(): void {
+    this.loading.set(true);
+
     this.subs.add(
       this.route.params
         .pipe(
@@ -54,9 +60,11 @@ export class UserUpdateComponent extends UserForm {
             this.user = user;
 
             this.populateForm();
+            this.loading.set(false);
           },
           error: (error) => {
             console.error(error);
+            this.loading.set(false);
           },
         }),
     );
