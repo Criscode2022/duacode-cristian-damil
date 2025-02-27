@@ -10,7 +10,7 @@ import {
 } from '@angular/material/paginator';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { SubsManagerDirective } from '../core/directives/subs-manager/subs-manager.directive';
 import { UsersService } from '../core/services/users.service';
 import { User } from '../core/types/user';
@@ -21,6 +21,7 @@ import { CreateDialog } from './components/create-dialog.component';
 @Component({
   selector: 'app-user-list',
   imports: [
+    RouterModule,
     CommonModule,
     UserComponent,
     LoadingSpinnerComponent,

@@ -1,7 +1,13 @@
 @if (loading()) {
   <app-loading-spinner></app-loading-spinner>
 } @else if (!users.length) {
-  <div class="flex flex-col gap-4 items-center justify-center h-96">
+  <button mat-icon-button routerLink="/" class="m-4">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+
+  <div
+    class="flex flex-col gap-4 items-center justify-center h-96 animate-fade"
+  >
     <img
       src="not_found.svg"
       class="h-60 aspect-auto"
@@ -11,10 +17,14 @@
     <h2 class="text-2xl font-bold text-center">User not found</h2>
   </div>
 } @else {
-  <h3 class="text-center font-bold text-4xl text-gray-700 py-6">Users</h3>
+  <h3
+    class="text-center font-bold text-4xl text-gray-700 py-6 animate-fade-down"
+  >
+    Users
+  </h3>
 
   <div
-    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-20 px-4"
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-20 px-4 animate-fade"
   >
     @for (user of users; track user.id) {
       <app-user [user]="user"></app-user>

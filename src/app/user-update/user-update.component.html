@@ -6,7 +6,9 @@
   @if (loading()) {
     <app-loading-spinner></app-loading-spinner>
   } @else if (!user) {
-    <div class="flex flex-col gap-4 items-center justify-center h-96">
+    <div
+      class="flex flex-col gap-4 items-center justify-center h-96 animate-fade"
+    >
       <img
         src="not_found.svg"
         class="h-60 aspect-auto"
@@ -17,7 +19,7 @@
     </div>
   } @else {
     <mat-card
-      class="relative w-80 transition-shadow duration-200 p-8 mx-auto lg:mx-0 mt-8"
+      class="relative w-80 transition-shadow duration-200 p-8 mx-auto lg:mx-0 mt-8 animate-fade"
     >
       <mat-card-header class="flex gap-2">
         <div>
