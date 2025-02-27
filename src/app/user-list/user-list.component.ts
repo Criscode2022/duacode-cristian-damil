@@ -9,6 +9,8 @@ import {
   PageEvent,
 } from '@angular/material/paginator';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { UsersService } from '../core/services/users.service';
 import { User } from '../core/types/user';
@@ -24,6 +26,8 @@ import { CreateDialog } from './components/create-dialog.component';
     MatIconModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
+    MatSidenavModule,
+    MatToolbarModule,
   ],
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss',
@@ -33,6 +37,7 @@ export class UserListComponent implements OnInit {
   private router = inject(Router);
   readonly dialog = inject(MatDialog);
   private usersService = inject(UsersService);
+  showFiller = false;
 
   protected users: User[] = [];
 

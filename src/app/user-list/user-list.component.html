@@ -1,31 +1,26 @@
-<div>
-  <!-- <mat-spinner></mat-spinner> -->
+<h3 class="text-center font-bold text-3xl p-4">Users</h3>
 
-  <h3 class="text-center font-bold text-3xl p-4">Users</h3>
+<div
+  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-20 px-4"
+>
+  @for (user of users; track user.id) {
+    <app-user [user]="user"></app-user>
+  }
 
-  <div
-    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4"
+  <button
+    mat-fab
+    color="primary"
+    class="!w-full min-h-24"
+    (click)="openDialog()"
   >
-    @for (user of users; track user.id) {
-      <app-user [user]="user"></app-user>
-    }
-
-    <button
-      mat-fab
-      extended
-      color="primary"
-      class="min-h-24"
-      (click)="openDialog()"
-    >
-      <mat-icon>add</mat-icon>
-    </button>
-  </div>
-
-  <mat-paginator
-    [length]="totalItems"
-    [pageSize]="pageSize"
-    (page)="changePage($event)"
-    class="md:absolute bottom-15 right-0 !bg-white"
-  >
-  </mat-paginator>
+    <mat-icon>add</mat-icon>
+  </button>
 </div>
+
+<mat-paginator
+  [length]="totalItems"
+  [pageSize]="pageSize"
+  (page)="changePage($event)"
+  class="fixed bottom-0 w-full z-10"
+>
+</mat-paginator>

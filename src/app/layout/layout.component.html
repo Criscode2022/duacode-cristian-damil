@@ -1,7 +1,27 @@
 <div class="flex flex-col min-h-screen">
   <app-header></app-header>
-  <main class="flex-grow">
-    <router-outlet></router-outlet>
-  </main>
-  <app-footer></app-footer>
+  <div class="flex-grow">
+    <mat-drawer-container class="example-container" autosize class="!bg-white">
+      <mat-drawer #drawer mode="side" class="!w-fit">
+        app-search-form
+      </mat-drawer>
+      <mat-toolbar class="flex justify-between">
+        <div class="flex gap-2">
+          <button
+            mat-icon-button
+            (click)="drawer.toggle()"
+            aria-label="Toggle sidenav"
+          >
+            <mat-icon>menu</mat-icon>
+          </button>
+          <img src="logo.svg" alt="Duacode logo" width="120" />
+        </div>
+
+        <span class="font-bold">27/02/2025</span>
+      </mat-toolbar>
+      <main class="flex-grow">
+        <router-outlet></router-outlet>
+      </main>
+    </mat-drawer-container>
+  </div>
 </div>
