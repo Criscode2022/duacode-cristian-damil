@@ -2,9 +2,35 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.8.
 
+## Libraries used
+
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Tailwind CSS Animated](https://www.tailwindcss-animated.com/)
+- [Angular Material](https://material.angular.io/)
+- [RxJS](https://rxjs.dev/)
+- [Animate.css](https://animate.style/)
+
 ## Development server
 
-To start a local development server, run:
+First, clone the repository using this command:
+
+```bash
+git clone git@github.com:Criscode2022/duacode-cristian-damil.git
+```
+
+Then, navigate to the folder:
+
+```bash
+cd duacode-cristian-damil
+```
+
+After that, install Node modules:
+
+```bash
+npm install
+```
+
+Finally, to start a local development server run:
 
 ```bash
 ng serve
