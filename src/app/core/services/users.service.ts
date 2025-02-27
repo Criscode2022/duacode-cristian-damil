@@ -34,6 +34,14 @@ export class UsersService {
       );
   }
 
+  public createUser(changes: Partial<User>) {
+    return this.http.post<User>(environment.apiUrl + '/users/', changes).pipe(
+      catchError((error) => {
+        return throwError(() => new Error('Failed to update user', error));
+      }),
+    );
+  }
+
   public updateUser(id: number, changes: Partial<User>) {
     return this.http
       .put<User>(`${environment.apiUrl}/users/${id}`, changes)

@@ -1,8 +1,8 @@
 import { inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { ErrorMessages } from '../core/types/error-messages';
+import { ErrorMessages } from '../../core/types/error-messages';
 
-export class UserUpdateForm {
+export class UserForm {
   private fb = inject(FormBuilder);
 
   protected errorMessages = new ErrorMessages();

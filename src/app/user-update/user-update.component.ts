@@ -12,7 +12,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { UsersService } from '../core/services/users.service';
 import { User } from '../core/types/user';
-import { UserUpdateForm } from './user-update.form';
+import { UserForm } from '../shared/forms/user.form';
 
 @Component({
   selector: 'app-user-update',
@@ -31,7 +31,7 @@ import { UserUpdateForm } from './user-update.form';
   templateUrl: './user-update.component.html',
   styleUrl: './user-update.component.scss',
 })
-export class UserUpdateComponent extends UserUpdateForm {
+export class UserUpdateComponent extends UserForm {
   private route = inject(ActivatedRoute);
   private location = inject(Location);
   private snackbar = inject(MatSnackBar);
@@ -68,7 +68,7 @@ export class UserUpdateComponent extends UserUpdateForm {
     });
   }
 
-  protected saveChanges() {
+  protected save() {
     if (this.form.invalid || !this.user?.id) {
       return;
     }
