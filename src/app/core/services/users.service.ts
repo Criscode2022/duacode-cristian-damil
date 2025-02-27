@@ -10,13 +10,12 @@ import { User, UserResponse, UsersResponse } from '../types/user';
 export class UsersService {
   private http = inject(HttpClient);
 
-  public getUsers(page: number): Observable<User[]> {
+  public getUsers(page: number): Observable<UsersResponse> {
     const params = new HttpParams().set('page', page.toString());
 
     return this.http
       .get<UsersResponse>(environment.apiUrl + '/users', { params })
       .pipe(
-        map((response: UsersResponse) => response.data),
         catchError((error) => {
           return throwError(() => new Error('Failed to fetch users', error));
         }),

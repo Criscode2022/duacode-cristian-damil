@@ -20,4 +20,12 @@
       <mat-icon>add</mat-icon>
     </button>
   </div>
+
+  <mat-paginator
+    [length]="totalItems"
+    [pageSize]="pageSize"
+    (page)="changePage($event)"
+    class="md:absolute bottom-15 right-0 !bg-white"
+  >
+  </mat-paginator>
 </div>
