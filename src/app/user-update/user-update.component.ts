@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { switchMap } from 'rxjs';
 import { UsersService } from '../core/services/users.service';
 import { User } from '../core/types/user';
 import { UserForm } from '../shared/forms/user.form';
@@ -40,20 +41,25 @@ export class UserUpdateComponent extends UserForm {
   protected user: User | null = null;
 
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      const userId = params['userId'];
+    this.subs.add(
+      this.route.params
+        .pipe(
+          switchMap((params) => {
+            const userId = params['userId'];
+            return this.usersService.getUser(userId);
+          }),
+        )
+        .subscribe({
+          next: (user) => {
+            this.user = user;
 
-      this.usersService.getUser(userId).subscribe({
-        next: (user) => {
-          this.user = user;
-
-          this.populateForm();
-        },
-        error: (error) => {
-          console.error(error);
-        },
-      });
-    });
+            this.populateForm();
+          },
+          error: (error) => {
+            console.error(error);
+          },
+        }),
+    );
   }
 
   private populateForm() {

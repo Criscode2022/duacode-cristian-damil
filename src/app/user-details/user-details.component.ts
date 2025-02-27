@@ -7,23 +7,28 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { switchMap } from 'rxjs';
+import { SubsManagerDirective } from '../core/directives/subs-manager/subs-manager.directive';
 import { UsersService } from '../core/services/users.service';
 import { User } from '../core/types/user';
 
 @Component({
   selector: 'app-user-details',
   imports: [
+    RouterModule,
     ClipboardModule,
     MatButtonModule,
     MatCardModule,
     MatIconModule,
     MatTooltipModule,
-    RouterModule,
   ],
   templateUrl: './user-details.component.html',
   styleUrl: './user-details.component.scss',
 })
-export class UserDetailsComponent implements OnInit {
+export class UserDetailsComponent
+  extends SubsManagerDirective
+  implements OnInit
+{
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private location = inject(Location);
@@ -34,18 +39,23 @@ export class UserDetailsComponent implements OnInit {
   protected user: User | null = null;
 
   ngOnInit(): void {
-    this.route.params.subscribe((params) => {
-      this.userId = params['userId'];
-
-      this.usersService.getUser(this.userId).subscribe({
-        next: (user) => {
-          this.user = user;
-        },
-        error: (error) => {
-          console.error(error);
-        },
-      });
-    });
+    this.subs.add(
+      this.route.params
+        .pipe(
+          switchMap((params) => {
+            this.userId = params['userId'];
+            return this.usersService.getUser(this.userId);
+          }),
+        )
+        .subscribe({
+          next: (user) => {
+            this.user = user;
+          },
+          error: (error) => {
+            console.error(error);
+          },
+        }),
+    );
   }
 
   protected delete() {

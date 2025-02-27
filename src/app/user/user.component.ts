@@ -5,6 +5,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
+import { StopPropagationDirective } from '../core/directives/stop-propagation/stop-propagation.directive';
 import { User } from '../core/types/user';
 
 @Component({
@@ -12,6 +13,7 @@ import { User } from '../core/types/user';
   imports: [
     RouterModule,
     ClipboardModule,
+    StopPropagationDirective,
     MatButtonModule,
     MatCardModule,
     MatIconModule,

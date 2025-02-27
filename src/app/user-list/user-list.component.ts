@@ -12,6 +12,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { SubsManagerDirective } from '../core/directives/subs-manager/subs-manager.directive';
 import { UsersService } from '../core/services/users.service';
 import { User } from '../core/types/user';
 import { UserComponent } from '../user/user.component';
@@ -32,7 +33,7 @@ import { CreateDialog } from './components/create-dialog.component';
   templateUrl: './user-list.component.html',
   styleUrl: './user-list.component.scss',
 })
-export class UserListComponent implements OnInit {
+export class UserListComponent extends SubsManagerDirective implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   readonly dialog = inject(MatDialog);
@@ -55,33 +56,39 @@ export class UserListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      const page = params['page'] || 1;
+    this.subs.add(
+      this.route.queryParams.subscribe((params) => {
+        const page = params['page'] || 1;
 
-      const queryParams = {
-        first_name: params['firstName'] ?? null,
-        last_name: params['lastName'] ?? null,
-        email: params['email'] ?? null,
-      };
+        const queryParams = {
+          first_name: params['firstName'] ?? null,
+          last_name: params['lastName'] ?? null,
+          email: params['email'] ?? null,
+        };
 
-      const filteredValues = Object.fromEntries(
-        Object.entries(queryParams).filter(([_, value]) => value),
-      );
+        const filteredValues = Object.fromEntries(
+          Object.entries(queryParams).filter(([_, value]) => value),
+        );
 
-      this.usersService.getUsers(page).subscribe((users) => {
-        this.users = users.data;
-        this.pageSize = users.per_page;
-        this.totalItems = users.total;
+        this.subs.add(
+          this.usersService.getUsers(page).subscribe((users) => {
+            this.users = users.data;
+            this.pageSize = users.per_page;
+            this.totalItems = users.total;
 
-        if (Object.keys(filteredValues).length) {
-          this.users = this.users.filter((user) =>
-            Object.entries(filteredValues).every(([key, value]) =>
-              (user as any)[key]?.toLowerCase().includes(value.toLowerCase()),
-            ),
-          );
-        }
-      });
-    });
+            if (Object.keys(filteredValues).length) {
+              this.users = this.users.filter((user) =>
+                Object.entries(filteredValues).every(([key, value]) =>
+                  (user as any)[key]
+                    ?.toLowerCase()
+                    .includes(value.toLowerCase()),
+                ),
+              );
+            }
+          }),
+        );
+      }),
+    );
   }
 
   protected openDialog(): void {

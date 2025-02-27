@@ -1,8 +1,9 @@
 import { inject } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { SubsManagerDirective } from '../../core/directives/subs-manager/subs-manager.directive';
 import { ErrorMessages } from '../../core/types/error-messages';
 
-export class UserForm {
+export class UserForm extends SubsManagerDirective {
   private fb = inject(FormBuilder);
 
   protected errorMessages = new ErrorMessages();
