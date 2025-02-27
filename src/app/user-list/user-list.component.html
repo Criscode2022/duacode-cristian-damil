@@ -1,26 +1,38 @@
-<h3 class="text-center font-bold text-3xl p-4">Users</h3>
+@if (!users.length) {
+  <div class="flex flex-col gap-4 items-center justify-center h-96">
+    <img
+      src="not_found.svg"
+      class="h-60 aspect-auto"
+      alt="Image showing a mountain and number 404"
+    />
 
-<div
-  class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-20 px-4"
->
-  @for (user of users; track user.id) {
-    <app-user [user]="user"></app-user>
-  }
+    <h2 class="text-2xl font-bold text-center">User not found</h2>
+  </div>
+} @else {
+  <h3 class="text-center font-bold text-4xl text-gray-700 py-6">Users</h3>
 
-  <button
-    mat-fab
-    color="primary"
-    class="!w-full min-h-24"
-    (click)="openDialog()"
+  <div
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-20 px-4"
   >
-    <mat-icon>add</mat-icon>
-  </button>
-</div>
+    @for (user of users; track user.id) {
+      <app-user [user]="user"></app-user>
+    }
+
+    <button
+      mat-fab
+      color="primary"
+      class="!w-full min-h-24"
+      (click)="openDialog()"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+}
 
 <mat-paginator
   [length]="totalItems"
   [pageSize]="pageSize"
   (page)="changePage($event)"
-  class="fixed bottom-0 w-full z-10"
+  class="fixed bottom-0 md:!text-xl w-full z-10"
 >
 </mat-paginator>

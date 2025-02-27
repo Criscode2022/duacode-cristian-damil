@@ -37,7 +37,6 @@ export class UserListComponent implements OnInit {
   private router = inject(Router);
   readonly dialog = inject(MatDialog);
   private usersService = inject(UsersService);
-  showFiller = false;
 
   protected users: User[] = [];
 
@@ -73,8 +72,6 @@ export class UserListComponent implements OnInit {
         this.users = users.data;
         this.pageSize = users.per_page;
         this.totalItems = users.total;
-
-        console.log(filteredValues);
 
         if (Object.keys(filteredValues).length) {
           this.users = this.users.filter((user) =>
