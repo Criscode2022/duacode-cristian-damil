@@ -1,0 +1,59 @@
+<form class="flex flex-col gap-2 m-8 w-60 h-100 pb-2" [formGroup]="form">
+  <h4 class="text-center text-xl font-bold mb-4">Search users</h4>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Search by first name</mat-label>
+    <input matInput formControlName="firstName" />
+    <button
+      *ngIf="this.firstName?.value?.length"
+      mat-icon-button
+      type="button"
+      matSuffix
+      (click)="clear('firstName')"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Last name</mat-label>
+    <input matInput formControlName="lastName" />
+    <button
+      *ngIf="this.lastName?.value?.length"
+      mat-icon-button
+      type="button"
+      matSuffix
+      (click)="clear('lastName')"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email" />
+    <button
+      *ngIf="this.email?.value?.length"
+      mat-icon-button
+      type="button"
+      matSuffix
+      (click)="clear('email')"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <button
+    mat-raised-button
+    color="primary"
+    class="w-full mb-4"
+    (click)="search()"
+    [disabled]="form.invalid"
+  >
+    <mat-icon>search</mat-icon> Search
+  </button>
+
+  <button mat-raised-button class="!bg-red-400 !text-white" (click)="reset()">
+    <mat-icon>clear</mat-icon> Clear
+  </button>
+</form>

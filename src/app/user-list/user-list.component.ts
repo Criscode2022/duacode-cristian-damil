@@ -58,10 +58,31 @@ export class UserListComponent implements OnInit {
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
       const page = params['page'] || 1;
+
+      const queryParams = {
+        first_name: params['firstName'] ?? null,
+        last_name: params['lastName'] ?? null,
+        email: params['email'] ?? null,
+      };
+
+      const filteredValues = Object.fromEntries(
+        Object.entries(queryParams).filter(([_, value]) => value),
+      );
+
       this.usersService.getUsers(page).subscribe((users) => {
         this.users = users.data;
         this.pageSize = users.per_page;
         this.totalItems = users.total;
+
+        console.log(filteredValues);
+
+        if (Object.keys(filteredValues).length) {
+          this.users = this.users.filter((user) =>
+            Object.entries(filteredValues).every(([key, value]) =>
+              (user as any)[key]?.toLowerCase().includes(value.toLowerCase()),
+            ),
+          );
+        }
       });
     });
   }
