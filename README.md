@@ -8,7 +8,6 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 - [Tailwind CSS Animated](https://www.tailwindcss-animated.com/)
 - [Angular Material](https://material.angular.io/)
 - [RxJS](https://rxjs.dev/)
-- [Animate.css](https://animate.style/)
 
 ## Development server
 
