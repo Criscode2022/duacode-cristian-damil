@@ -13,6 +13,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { SubsManagerDirective } from '../core/directives/subs-manager/subs-manager.directive';
 import { UsersService } from '../core/services/users.service';
+import { QueryParams } from '../core/types/queryParams';
 import { User } from '../core/types/user';
 import { LoadingSpinnerComponent } from '../shared/components/loading-spinner/loading-spinner.component';
 import { UserComponent } from '../user/user.component';
@@ -65,7 +66,7 @@ export class UserListComponent extends SubsManagerDirective implements OnInit {
       this.route.queryParams.subscribe((params) => {
         const page = params['page'] || 1;
 
-        const queryParams = {
+        const queryParams: QueryParams = {
           first_name: params['firstName'] ?? null,
           last_name: params['lastName'] ?? null,
           email: params['email'] ?? null,
@@ -82,26 +83,40 @@ export class UserListComponent extends SubsManagerDirective implements OnInit {
               this.pageSize = users.per_page;
               this.totalItems = users.total;
 
-              this.loading.set(false);
-
               if (Object.keys(filteredValues).length) {
-                this.users = this.users.filter((user) =>
-                  Object.entries(filteredValues).every(([key, value]) =>
-                    (user as any)[key]
-                      ?.toLowerCase()
-                      .includes(value.toLowerCase()),
-                  ),
-                );
+                this.filterUsers(page, users.total_pages, filteredValues);
+              } else {
+                this.loading.set(false);
               }
-            },
-            error: (err) => {
-              console.error('Error fetching users:', err);
-              this.loading.set(false);
             },
           }),
         );
       }),
     );
+  }
+
+  private filterUsers(
+    currentPage: number,
+    totalPages: number,
+    filteredValues: Partial<QueryParams>,
+  ): void {
+    for (let i = 1; i <= totalPages; i++) {
+      if (i !== currentPage) {
+        this.usersService.getUsers(i).subscribe((users) => {
+          this.users = [...this.users, ...users.data];
+
+          this.users = this.users.filter((user) =>
+            Object.entries(filteredValues).every(([key, value]) =>
+              (user as any)[key]
+                ?.toLowerCase()
+                .includes((value as string).toLowerCase()),
+            ),
+          );
+
+          this.loading.set(false);
+        });
+      }
+    }
   }
 
   protected openDialog(): void {
