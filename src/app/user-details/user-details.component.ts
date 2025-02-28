@@ -3,6 +3,7 @@ import { Location } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -12,6 +13,7 @@ import { SubsManagerDirective } from '../core/directives/subs-manager/subs-manag
 import { UsersService } from '../core/services/users.service';
 import { User } from '../core/types/user';
 import { LoadingSpinnerComponent } from '../shared/components/loading-spinner/loading-spinner.component';
+import { ConfirmDialogComponent } from './dialogs/confirmation-dialog';
 
 @Component({
   selector: 'app-user-details',
@@ -21,6 +23,7 @@ import { LoadingSpinnerComponent } from '../shared/components/loading-spinner/lo
     LoadingSpinnerComponent,
     MatButtonModule,
     MatCardModule,
+    MatDialogModule,
     MatIconModule,
     MatTooltipModule,
   ],
@@ -33,6 +36,7 @@ export class UserDetailsComponent
 {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private dialog = inject(MatDialog);
   private location = inject(Location);
   private snackbar = inject(MatSnackBar);
   private usersService = inject(UsersService);
@@ -71,18 +75,24 @@ export class UserDetailsComponent
       return;
     }
 
-    this.usersService.deleteUser(this.userId).subscribe({
-      next: () => {
-        this.router.navigate(['/']);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent);
 
-        this.snackbar.open('User deleted successfully', 'Close', {
-          duration: 5000,
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.usersService.deleteUser(this.userId).subscribe({
+          next: () => {
+            this.router.navigate(['/']);
+
+            this.snackbar.open('User deleted successfully', 'Close', {
+              duration: 5000,
+            });
+          },
+          error: () =>
+            this.snackbar.open('Failed to delete user', 'Close', {
+              duration: 5000,
+            }),
         });
-      },
-      error: () =>
-        this.snackbar.open('Failed to delete user', 'Close', {
-          duration: 5000,
-        }),
+      }
     });
   }
 
